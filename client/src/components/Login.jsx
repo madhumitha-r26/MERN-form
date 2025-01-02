@@ -16,14 +16,14 @@ const Login = () => {
     try {
       //login path for entering data
       const loginResponse = await axios.post(
-        "https://mern-user-authentication.vercel.app/login", 
+        "http://localhost:5000/login", 
         { email, password },
         { withCredentials: true }
       );
 
 //users path for accesing the collection in the database
       if (loginResponse.data === "SUCCESS") {
-        const userResponse = await axios.get("https://mern-user-authentication.vercel.app/users", {
+        const userResponse = await axios.get("http://localhost:5000/users", {
         withCredentials: true,
 });
 

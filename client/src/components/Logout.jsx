@@ -8,13 +8,14 @@ const Logout = () => {
   const setIsLoggedIn = useContext(SetIsLoggedInContext);
   const handleLogout = () => {
     axios
-      .post("hhttps://mern-user-authentication.vercel.app/logout", {}, { withCredentials: true })
+      .post("http://localhost:5000/logout", {}, { withCredentials: true })
       .then((response) => {
         if (response.status === 200) {
           setIsLoggedIn(false);
           navigate("/"); //navigates to home page
         }
       })
+
       .catch((error) => {
         console.error("ERROR LOGGING OUT:", error);
         alert("AN ERROR OCCURRED DURING LOGOUT. PLEASE TRY AGAIN.");
