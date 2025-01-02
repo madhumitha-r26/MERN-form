@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/user", { withCredentials: true })
+      .get("https://mern-user-authentication.vercel.app/user", { withCredentials: true })
       .then((response) => {
         if (response.data.user) {
           setIsLoggedIn(true);
