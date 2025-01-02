@@ -38,7 +38,7 @@ app.use(
   })
 );
 
-app.post("https://mern-user-authentication.vercel.app/register", async (req, res) => {
+app.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
     console.log(name + " " + email + " " + password);
@@ -57,7 +57,7 @@ app.post("https://mern-user-authentication.vercel.app/register", async (req, res
 });
 
 //for entering the login credentials we use the post method here
-app.post("https://mern-user-authentication.vercel.app/login", async (req, res) => {
+app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
@@ -79,7 +79,7 @@ app.post("https://mern-user-authentication.vercel.app/login", async (req, res) =
 });
 
 //here we are submitting the data to the session
-app.get("https://mern-user-authentication.vercel.app/users", (req, res) => {
+app.get("/users", (req, res) => {
   try {
     if (req.session.user) {
       res.json({ user: req.session.user });
@@ -93,7 +93,7 @@ app.get("https://mern-user-authentication.vercel.app/users", (req, res) => {
 });
 
 
-app.post("https://mern-user-authentication.vercel.app/logout",(req,res)=>{
+app.post("/logout",(req,res)=>{
 if(req.session){
   req.session.destroy(err=>{
     if(err){
