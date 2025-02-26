@@ -8,7 +8,7 @@ const Logout = () => {
   const setIsLoggedIn = useContext(SetIsLoggedInContext);
   const handleLogout = () => {
     axios
-      .post("https://mern-user-authentication.vercel.app/logout", {}, { withCredentials: true })
+      .post("http://localhost:5000/users/logout", {}, { withCredentials: true })
       .then((response) => {
         if (response.status === 200) {
           setIsLoggedIn(false);

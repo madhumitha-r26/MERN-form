@@ -1,85 +1,81 @@
-import React from "react";
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink,useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import axios from 'axios'
 
-const Register = () => {
+function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate=useNavigate()
 
-  const navigate = useNavigate();
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    axios.post("https://mern-user-authentication-api.vercel.app/register", { name, email, password })
-      
-      .then((result) => {
-        console.log(result);
-        if (result.data === "USER ALREADY EXISTS") {
-          alert("E-MAIL ALREADY REGISTERED!");
-          navigate("/register");
-        } else {
-          alert("REGISTERED SUCCESSFULLY!");
-          navigate("/login");
-        }
-      })
-
-      .catch((err) => {
-        if (err.response && err.response.status === 400) {
-          alert("E-MAIL ALREADY REGISTERED!");
-          navigate("/register");
-        }
-      });
-  };
+const handleSignUp=(e)=>{
+  e.preventDefault();
+  axios.post("http://localhost:5000/users/register", 
+    { name, email, password }, 
+    { withCredentials: true }
+  )
+  
+  .then(result=>{
+      console.log(result)
+      window.alert("Registered successfully!")
+      navigate("/login")
+  })
+  .catch(err => {
+    if(err.response){
+      window.alert("User already exists!")
+      navigate("/")
+      console.log(err)
+    }
+  });
+  
+}
 
   return (
     <div>
-    <Navbar/>
+      <Navbar />
       <div className="mt-28">
         <div>
           <h1 className="text-center font-semibold text-4xl mb-4">REGISTER</h1>
         </div>
-        <form
-          className="flex justify-center items-center"
-          onSubmit={handleSubmit}
-        >
+
+        <form className="flex justify-center items-center" onSubmit={handleSignUp}>
           <div className="artboard phone-1 space-y-4">
             <input
               type="text"
-              required
-              onChange={(e) => setName(e.target.value)} // 'e' stores the value in the setter function (i.e) setName()
+              name="name"
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter Name"
               className="input input-bordered w-full max-w-xs"
-              name="name"
             />
             <input
               type="email"
-              required
+              name="email"
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter Email"
               className="input input-bordered w-full max-w-xs"
-              name="email"
             />
             <input
               type="password"
-              required
+              name="password"
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter Password"
               className="input input-bordered w-full max-w-xs"
-              name="password"
             />
-            <button type="submit" className="btn btn-primary w-full">
+            <button className="btn btn-primary w-full hover:bg-primary">
               Register
             </button>
+            <p className="text-center">
+              Already have an account?{" "}
+              <NavLink to={"/login"} className="text-blue-600">
+                Login
+              </NavLink>{" "}
+            </p>
           </div>
         </form>
       </div>
     </div>
   );
-};
+}
 
 export default Register;
