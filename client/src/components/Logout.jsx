@@ -1,32 +1,23 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { SetIsLoggedInContext } from "../App.jsx";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const setIsLoggedIn = useContext(SetIsLoggedInContext);
+
   const handleLogout = () => {
-    axios
-      .post("http://localhost:5000/users/logout", {}, { withCredentials: true })
-      .then((response) => {
-        if (response.status === 200) {
-          setIsLoggedIn(false);
-          navigate("/"); //navigates to home page
-        }
-      })
-
-      .catch((error) => {
-        console.error("ERROR LOGGING OUT:", error);
-        alert("AN ERROR OCCURRED DURING LOGOUT. PLEASE TRY AGAIN.");
-      });
+    window.localStorage.removeItem("token");
+    console.log("Logged out");
+    navigate("/login");
   };
-
   return (
-    <div>
-      <button className="btn btn-outline btn-primary" onClick={handleLogout}>
-        Logout
-      </button>
+    <div className="navbar bg-base-100">
+      <div className="navbar-start">MERN OPERATIONS</div>
+
+      <div className="navbar-end">
+        <button onClick={handleLogout} className="btn btn-outline btn-primary">
+          Logout
+        </button>
+      </div>
     </div>
   );
 };

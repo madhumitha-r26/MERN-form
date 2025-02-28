@@ -7,7 +7,7 @@ const Navbar = () => {
       <div className="navbar bg-base-100">
         <div className="flex-1">
           <NavLink to="/" className="w-full text-2xl font-mono align-middle">
-            MERN FORM
+            MERN OPERATIONS
           </NavLink>
         </div>
         <div className="flex-none">

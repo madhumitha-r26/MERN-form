@@ -1,51 +1,22 @@
 import "./App.css";
-import Login from "./components/Login";
+import Login from "./Components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import Welcome from "./components/Welcome";
-import { Route, Routes, NavLink, BrowserRouter } from "react-router-dom";
-import { useState, useEffect, createContext } from "react";
-import axios from "axios";
-
-export const IsLoggedInContext = createContext(false);
-export const SetIsLoggedInContext = createContext(false);
+import { Route, Routes} from "react-router-dom";
+import Update from "./components/Update";
+import Delete from "./components/Delete";
 
 function App() {
-  const [IsLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    axios
-      .get("https://mern-user-authentication-api.vercel.app/user", { withCredentials: true })
-      .then((response) => {
-        if (response.data.user) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-      })
-      .catch(() => setIsLoggedIn(false));
-  }, []);
-
   return (
-    <IsLoggedInContext.Provider value={IsLoggedIn}>
-      <SetIsLoggedInContext.Provider value={setIsLoggedIn}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/login"
-            element={IsLoggedIn ? <NavLink to="/welcome" replace/> : <Login />}
-          ></Route>
-          <Route
-            path="/register"
-            element={IsLoggedIn ? <NavLink to="/welcome" replace/> : <Register />}
-          ></Route>
-          <Route
-            path="/welcome"
-            element={IsLoggedIn ? <Welcome /> : <NavLink to="/" replace />}
-          ></Route>
-        </Routes>
-      </SetIsLoggedInContext.Provider>
-    </IsLoggedInContext.Provider>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />}></Route>
+      <Route path="/register" element={<Register />}></Route>
+      <Route path="/welcome" element={<Welcome />}></Route>
+      <Route path="/update" element={<Update/>}></Route>
+      <Route path="/delete" element={<Delete/>}></Route>
+    </Routes>
   );
 }
 

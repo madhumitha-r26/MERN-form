@@ -1,14 +1,17 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const app = express();
 const cors = require("cors");
-const cookieParser=require("cookie-parser")
+const cookieParser = require("cookie-parser");
+const DbConnection = require("./DbConnection");
 
-const DbConnection=require("./DbConnection")
-DbConnection()
 
 dotenv.config();
 
+const app = express();
+
+DbConnection();
+
+// Configure CORS to prevent axios error
 app.use(cors({
   origin: "http://localhost:5173",  // Allow frontend URL
   credentials: true,  // Allow credentials (cookies, sessions, etc.)
@@ -16,15 +19,23 @@ app.use(cors({
   allowedHeaders: "Content-Type,Authorization" // Allow headers
 }));
 
-app.use(cookieParser())
+// Middleware
+app.use(cookieParser());
 app.use(express.json());
 
+// Routes
 const userRouter = require("./router/userRouter");
-
-
 app.use("/users", userRouter);
 
-
-app.listen(process.env.PORT, () => {
-  console.log(`SERVER IS RUNNING ON PORT - ${process.env.PORT}`);
+// Verification endpoint
+app.post('/users/verify', (req, res) => {
+  // Your verification logic here
+  res.json({ status: 200, data: 'new-token' });
 });
+
+// Start the server
+const PORT = process.env.PORT;
+app.listen(PORT, () => {
+  console.log(`SERVER IS RUNNING ON PORT - ${PORT}`);
+});
+

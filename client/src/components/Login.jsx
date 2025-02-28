@@ -1,5 +1,5 @@
-import { React, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import axios from "axios";
 
@@ -21,17 +21,20 @@ function Login() {
       console.log(result);
 
       if (result.status === 200) {
-        window.alert("Logged in successfully!");
+        window.localStorage.setItem("token", result.data.token);
         navigate("/welcome");
+      } else {
+        window.alert("Login failed!");
+        console.log("Login failed:", result);
       }
     } catch (err) {
       if (err.response) {
         window.alert("Invalid credentials!");
-        navigate("/")
         console.log(err.response.data);
       } else {
         console.error("Login error:", err);
       }
+      navigate("/login");
     }
   };
 
@@ -42,38 +45,27 @@ function Login() {
         <div>
           <h1 className="text-center font-semibold text-4xl mb-4">LOGIN</h1>
         </div>
-        <form
-          className="flex justify-center items-center"
-          onSubmit={handleLogin}
-        >
+        <form className="flex justify-center items-center" onSubmit={handleLogin}>
           <div className="artboard phone-1 space-y-4">
             <input
-              type="text"
-              placeholder="Enter Email"
-              required
+              type="email"
               name="email"
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter Email"
               className="input input-bordered w-full max-w-xs"
+              required
             />
             <input
               type="password"
               name="password"
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter Password"
-              required
               className="input input-bordered w-full max-w-xs"
+              required
             />
-          
-
             <button className="btn btn-primary w-full hover:bg-primary">
               Login
             </button>
-            <p className="text-center">
-              Don't have an account?{" "}
-              <NavLink to={"/register"} className="text-blue-600">
-                Register{" "}
-              </NavLink>
-            </p>
           </div>
         </form>
       </div>

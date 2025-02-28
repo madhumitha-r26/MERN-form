@@ -21,10 +21,10 @@ router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
     console.log(name, email, password);
-    
+
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: "User already exists!" });
+      return res.status(400).json({ message: "User already exists!" });
     }
 
     const hashedPwd = await bcrypt.hash(password, 10);
@@ -45,25 +45,82 @@ router.post("/login", async (req, res) => {
 
     const existingUser = await userModel.findOne({ email });
     if (!existingUser) {
-      return res.status(400).json({ error: "No user exists!" });
+      return res.status(400).json({ message: "No user exists!" });
     }
 
     const pwdMatch = await bcrypt.compare(password, existingUser.password);
     if (!pwdMatch) {
-      return res.status(401).json({ success: false, message: "Password does not match" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Incorrect Password" });
     }
 
-    // Generate JWT Token
-    const token = jwt.sign({ name: existingUser.name }, process.env.KEY, { expiresIn: "1h" });
+    const token = jwt.sign({ email: existingUser.email }, process.env.KEY, {
+      expiresIn: "1h",
+    });
 
-    // Set Cookie Before Sending Response
     res.cookie("token", token, { httpOnly: true, maxAge: 360000 });
 
-    return res.status(200).json({ success: true, message: "Login successful", token });
+    return res
+      .status(200)
+      .json({ success: true, message: "Login successful", token });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
 
-module.exports = router;
+// ---------------------------- Verify ----------------------------
+router.post("/verify", async (req, res) => {
+  const { token } = req.body;
+  try {
+    const decoded = jwt.verify(token, process.env.KEY);
+    const user = await userModel.findOne({ email: decoded.email });
+    if (user) {
+      res.json({ status: "ok", user });
+    } else {
+      res.json({ status: "error", message: "User not found" });
+    }
+  } catch (err) {
+    res.json({ status: "error", message: err.message });
+  }
+});
 
+// ---------------------------- Update ----------------------------
+router.post("/update", async (req, res) => {
+  const { email, name, password } = req.body;
+  console.log("Update request received:", { email, name, password });
+  try {
+    const hashedPwd = await bcrypt.hash(password, 10);
+    const updatedUser = await userModel.findOneAndUpdate(
+      { email },
+      { name, password: hashedPwd },
+      { new: true }
+    );
+    if (updatedUser) {
+      res.json({ status: "ok", message: "User updated successfully", user: updatedUser });
+    } else {
+      res.json({ status: "error", message: "User not found" });
+    }
+  } catch (err) {
+    res.json({ status: "error", message: err.message });
+  }
+});
+
+
+// ---------------------------- Delete ----------------------------
+router.post("/delete", async (req, res) => {
+  const { email } = req.body;
+  console.log("Delete request received:", { email });
+  try {
+    const deletedUser = await userModel.findOneAndDelete({ email });
+    if (deletedUser) {
+      res.json({ status: "ok", message: "User deleted successfully" });
+    } else {
+      res.json({ status: "error", message: "User not found" });
+    }
+  } catch (err) {
+    res.json({ status: "error", message: err.message });
+  }
+});
+
+module.exports = router;
