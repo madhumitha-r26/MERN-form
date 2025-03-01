@@ -16,7 +16,7 @@ const Welcome = () => {
     }
 
     const token = window.localStorage.getItem("token");
-    fetch("http://localhost:5000/users/verify", {
+    fetch("https://mern-form-urip.vercel.app/users/verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

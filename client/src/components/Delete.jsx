@@ -9,7 +9,7 @@ function Delete() {
 
   const handleDelete = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:5000/users/delete", 
+    axios.post("https://mern-form-urip.vercel.app/users/delete", 
       { email }, 
       { withCredentials: true }
     )

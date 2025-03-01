@@ -12,7 +12,7 @@ function Update() {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:5000/users/update", 
+    axios.post("https://mern-form-urip.vercel.app/users/update", 
       { id, name, email, password }, 
       { withCredentials: true }
     )
