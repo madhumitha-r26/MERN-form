@@ -38,6 +38,11 @@ app.post('/users/verify', (req, res) => {
   res.json({ status: 200, data: 'new-token' });
 });
 
+
+app.get("/",(req,res)=>{
+  res.send("WELCOME TO MERN FORM API");
+});
+
 // Start the server
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
