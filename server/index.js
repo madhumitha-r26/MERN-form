@@ -13,7 +13,7 @@ DbConnection();
 
 // Configure CORS to prevent axios error
 app.use(cors({
-  origin: "https://mern-form-azure.vercel.app/",  // Allow frontend URL
+  origin: "https://mern-form-azure.vercel.app",  // Allow frontend URL
   credentials: true,  // Allow credentials (cookies, sessions, etc.)
   methods: "GET,POST,PUT,DELETE", // Allow necessary HTTP methods
   allowedHeaders: "Content-Type,Authorization" // Allow headers
