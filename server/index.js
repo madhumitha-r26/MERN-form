@@ -13,14 +13,16 @@ DbConnection();
 
 // Configure CORS to prevent axios error
 app.use(cors({
-  origin: "https://mern-form-azure.vercel.app", // Allow frontend URL
-  credentials: true, // Allow credentials (cookies, sessions, etc.)
-  methods: "GET,POST,PUT,DELETE,OPTIONS", // Include OPTIONS for preflight
-  allowedHeaders: "Content-Type,Authorization" // Allow necessary headers
+  origin: "https://mern-form-azure.vercel.app",  // Allow only your frontend URL
+  credentials: true,  // ✅ Allow credentials (cookies, sessions, etc.)
+  methods: "GET,POST,PUT,DELETE",
+  allowedHeaders: "Content-Type,Authorization"
 }));
 
+
 // Handle preflight requests explicitly
-app.options("*", cors());
+app.options("*", cors()); // ✅ Allow preflight for all routes
+
 
 // Middleware
 app.use(cookieParser());
