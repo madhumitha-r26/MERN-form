@@ -4,48 +4,52 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const DbConnection = require("./DbConnection");
 
-
 dotenv.config();
 
 const app = express();
 
 DbConnection();
 
-// Configure CORS to prevent axios error
+//  Configure CORS Properly
 app.use(cors({
   origin: "https://mern-form-azure.vercel.app",  // Allow only your frontend URL
-  credentials: true,  // ✅ Allow credentials (cookies, sessions, etc.)
+  credentials: true,  // ✅ Required for cookies/sessions to work
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type,Authorization"
 }));
 
-
-// Handle preflight requests explicitly
-app.options("*", cors()); // ✅ Allow preflight for all routes
-
-
-// Middleware
+//  Middleware
 app.use(cookieParser());
 app.use(express.json());
 
-// Routes
+// Handle Preflight Requests Correctly
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://mern-form-azure.vercel.app");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204); // No content for preflight
+  }
+  next();
+});
+
+//  Routes
 const userRouter = require("./router/userRouter");
 app.use("/users", userRouter);
 
-// Verification endpoint
+//  Verification Endpoint (If Needed)
 app.post('/users/verify', (req, res) => {
-  // Your verification logic here
   res.json({ status: 200, data: 'new-token' });
 });
 
-
-app.get("/",(req,res)=>{
+//  Root API Endpoint
+app.get("/", (req, res) => {
   res.send("WELCOME TO MERN FORM API");
 });
 
-// Start the server
-const PORT = process.env.PORT;
+//  Start the Server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`SERVER IS RUNNING ON PORT - ${PORT}`);
 });
-
